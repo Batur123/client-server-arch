@@ -13,7 +13,6 @@ import org.junit.Test;
 // User Class
 class User
 {
-    //User Unique ID
     private String UUID,RecentCommand,Log,Password,UserName,RecentCommandDate;
 
     public String GetUUID()
@@ -21,8 +20,7 @@ class User
         return UUID;
     }
 
-    public String GetRecentCommand()
-    {
+    public String GetRecentCommand() {
         return RecentCommand;
     }
 
