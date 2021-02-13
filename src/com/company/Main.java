@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -13,7 +14,8 @@ import org.junit.Test;
 // User Class
 class User
 {
-    private String UUID,RecentCommand,Log,Password,UserName,RecentCommandDate;
+    private String UUID,RecentCommand,Log,Password,UserName,RecentCommandDate,UserSessionID;
+    private List<String> ListofCommandArgs;
 
     public String GetUUID()
     {
@@ -42,6 +44,18 @@ class User
     public String GetUserName()
     {
         return UserName;
+    }
+
+    public String GetUserSessionID() {return UserSessionID; }
+
+    public List<String> GetListofCommandArgs()
+    {
+        return ListofCommandArgs;
+    }
+
+    public void SetListofCommandArgs(List<String> _CommandArgs)
+    {
+        this.ListofCommandArgs = _CommandArgs;
     }
 
     public void SetRecentCommand(String _RecentCommand)
@@ -74,214 +88,13 @@ class User
         this.UserName = _UserName;
     }
 
+    public void SetUserSessionID(String _SessionID) {this.UserSessionID = _SessionID; }
+
     public void PrintUserCommands()
     {
         System.out.println("User: "+this.UUID);
         System.out.println("Latest Command: "+this.RecentCommand);
         System.out.println("Command Date: "+this.RecentCommandDate);
-    }
-}
-
-class UnitTest
-{
-    @Test
-    public void UnitTestFunction()
-    {
-        UnitTestFunction("Root","cmd /cd /dir" );
-    }
-
-    @Test
-    public void UnitTestFunction(String _Username, String Command)
-    {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-
-        List<String> Users = Arrays.asList("Root", "Batuhan");
-        User User1 = new User();
-        User1.SetUUID("31972875-4a74-4022-bb78-2c6028cb2d6a");
-        User1.SetPassword("12345");
-        User1.SetUserName("Root");
-
-        User User2 = new User();
-        User2.SetUUID("88212c94-62b2-4cea-9996-04120c1ea87c");
-        User2.SetPassword("5544");
-        User2.SetUserName("Batuhan");
-
-        if(!Users.contains(_Username))
-        {
-            System.out.println(ANSI_RED+"You selected wrong username.");
-        }
-        else
-        {
-            Process process;
-            if (IS_WINDOWS)
-            {
-                if(!Command.equals("cmd"))
-                {
-                    try
-                    {
-                        process = Runtime.getRuntime().exec(Command, null, null);
-                        System.out.println("Command: "+Command);
-                        printResults(process);
-
-                    }
-                    catch(IOException IOExp)
-                    {
-                        System.out.println(ANSI_RED+"-------");
-                        System.out.println(ANSI_RED+IOExp);
-                        System.out.println(ANSI_RED+"-------");
-                        System.out.println(ANSI_RED+"System: Wrong command.");
-                    }
-                    catch(NullPointerException NormEx)
-                    {
-                        System.out.println(ANSI_RED+"-------");
-                        System.out.println(ANSI_RED+NormEx);
-                        System.out.println(ANSI_RED+"-------");
-                        System.out.println(ANSI_RED+"You cannot leave command line blank.");
-                    }
-                    catch(UnsupportedOperationException OpEx)
-                    {
-                        System.out.println(ANSI_RED+"-------");
-                        System.out.println(ANSI_RED+OpEx);
-                        System.out.println(ANSI_RED+"-------");
-                        System.out.println(ANSI_RED+"Operating system not supporting that command.");
-                    }
-                    catch(Exception ex)
-                    {
-                        System.out.println(ANSI_RED+"Error");
-                    }
-                    finally
-                    {
-                        if(_Username.contains("Root"))
-                        {
-                            User1.SetRecentCommand(Command);
-                            User1.SetRecentCommandDate(dtf.format(now));
-                            User1.SetLog(User1.GetUserName()+" user wrote ("+User1.GetRecentCommand()+") command on "+User1.GetRecentCommandDate());
-                        }
-                        else if(_Username.contains("Batuhan"))
-                        {
-                            User2.SetRecentCommand(Command);
-                            User2.SetRecentCommandDate(dtf.format(now));
-                            User2.SetLog(User2.GetUserName()+" user wrote ("+User2.GetRecentCommand()+") command on "+User2.GetRecentCommandDate());
-                        }
-                    }
-                }
-                else
-                {
-                    System.out.println("You cant run this command");
-                }
-            }
-            else if (IS_MAC)
-            {
-                System.out.println("Mac");
-            }
-            else if (IS_UNIX)
-            {
-                try
-                {
-                    process = Runtime.getRuntime().exec(Command, null, null);
-                    printResults(process);
-                }
-                catch(IOException IOExp)
-                {
-                    System.out.println(ANSI_RED+"-------");
-                    System.out.println(ANSI_RED+IOExp);
-                    System.out.println(ANSI_RED+"-------");
-                    System.out.println(ANSI_RED+"System: You cant run this command.");
-                }
-                catch(NullPointerException NormEx)
-                {
-                    System.out.println(ANSI_RED+"-------");
-                    System.out.println(ANSI_RED+NormEx);
-                    System.out.println(ANSI_RED+"-------");
-                    System.out.println(ANSI_RED+"You cannot leave command line blank.");
-                }
-                catch(UnsupportedOperationException OpEx)
-                {
-                    System.out.println(ANSI_RED+"-------");
-                    System.out.println(ANSI_RED+OpEx);
-                    System.out.println(ANSI_RED+"-------");
-                    System.out.println(ANSI_RED+"Operating system not supporting that command.");
-                }
-                catch(Exception ex)
-                {
-                    System.out.println(ANSI_RED+"Error");
-                }
-                finally
-                {
-                    if(_Username.contains("Root"))
-                    {
-                        User1.SetRecentCommand(Command);
-                        User1.SetRecentCommandDate(dtf.format(now));
-                        User1.SetLog(User1.GetUserName()+" user wrote ("+User1.GetRecentCommand()+") command on "+User1.GetRecentCommandDate());
-                    }
-                    else if(_Username.contains("Batuhan"))
-                    {
-                        User2.SetRecentCommand(Command);
-                        User2.SetRecentCommandDate(dtf.format(now));
-                        User2.SetLog(User2.GetUserName()+" user wrote ("+User2.GetRecentCommand()+") command on "+User2.GetRecentCommandDate());
-                    }
-                }
-
-            }
-            else if (IS_SOLARIS)
-            {
-                System.out.println("Solaris");
-            }
-            else
-            {
-                System.out.println(ANSI_RED+"NULL");
-            }
-        }
-
-        if(User1.GetLog() != null)
-        {
-            System.out.println(ANSI_CYAN+User1.GetLog());
-            User1.PrintUserCommands();
-        }
-        if(User2.GetLog() != null)
-        {
-            System.out.println(ANSI_CYAN+User2.GetLog());
-            User1.PrintUserCommands();
-        }
-    }
-
-
-    /*
-     Check Operating System
-     */
-    private static String OS = System.getProperty("os.name").toLowerCase();
-    public static final boolean IS_WINDOWS = (OS.indexOf("win") >= 0);
-    public static final boolean IS_MAC = (OS.indexOf("mac") >= 0);
-    public static final boolean IS_UNIX = (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
-    public static final boolean IS_SOLARIS = (OS.indexOf("sunos") >= 0);
-
-    /*
-     Misc
-     */
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-
-
-    /*  Print the Result of Shell Commands
-     *  @param process
-     *  @return returns the string of shell command output
-     */
-    public void printResults(Process process) throws IOException
-    {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = "";
-        while ((line = reader.readLine()) != null)
-        {
-            System.out.println(ANSI_YELLOW+line);
-        }
     }
 }
 
@@ -372,6 +185,18 @@ public class Main
                 {
                     System.out.print(ANSI_RESET+ANSI_GREEN+"Enter your command to the command line:"+ANSI_RESET);
                     String Command = scanner.nextLine();
+
+                    //Store Args of the Command in List.
+                    List<String> CommandArgs = new ArrayList<String>();
+                    String[] arrOfStr = Command.split(" ", 0);
+                    for (String a : arrOfStr)
+                    {
+                        CommandArgs.add(a);
+                    }
+
+                    User1.SetListofCommandArgs(CommandArgs);
+                  //  User2.SetListofCommandArgs(CommandArgs);
+
                     Process process;
 
                     if (IS_WINDOWS)
@@ -512,8 +337,16 @@ public class Main
                 User1.PrintUserCommands();
             }
 
+            int Choose = 0;
             System.out.println(ANSI_RED+"Do you want to go back? Press 1 for reset program. Press anything except 1 for exit."+ANSI_RESET);
-            int Choose = scanner.nextInt();
+            try
+            {
+                Choose = scanner.nextInt();
+            }
+            catch(Exception ex)
+            {
+
+            }
 
             switch(Choose)
             {
@@ -526,7 +359,208 @@ public class Main
                     break;
                 }
             }
-
             //endregion
+    }
+}
+
+//This class is only for Unit Testing.
+class UnitTest
+{
+    @Test
+    public void UnitTestFunction()
+    {
+        UnitTestFunction("Root","cmd /cd /dir" );
+    }
+
+    @Test
+    public void UnitTestFunction(String _Username, String Command)
+    {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        List<String> Users = Arrays.asList("Root", "Batuhan");
+        User User1 = new User();
+        User1.SetUUID("31972875-4a74-4022-bb78-2c6028cb2d6a");
+        User1.SetPassword("12345");
+        User1.SetUserName("Root");
+
+        User User2 = new User();
+        User2.SetUUID("88212c94-62b2-4cea-9996-04120c1ea87c");
+        User2.SetPassword("5544");
+        User2.SetUserName("Batuhan");
+
+        if(!Users.contains(_Username))
+        {
+            System.out.println(ANSI_RED+"You selected wrong username.");
+        }
+        else
+        {
+            Process process;
+            if (IS_WINDOWS)
+            {
+                if(!Command.equals("cmd"))
+                {
+                    try
+                    {
+                        process = Runtime.getRuntime().exec(Command, null, null);
+                        System.out.println("Command: "+Command);
+                        printResults(process);
+                    }
+                    catch(IOException IOExp)
+                    {
+                        System.out.println(ANSI_RED+"-------");
+                        System.out.println(ANSI_RED+IOExp);
+                        System.out.println(ANSI_RED+"-------");
+                        System.out.println(ANSI_RED+"System: Wrong command.");
+                    }
+                    catch(NullPointerException NormEx)
+                    {
+                        System.out.println(ANSI_RED+"-------");
+                        System.out.println(ANSI_RED+NormEx);
+                        System.out.println(ANSI_RED+"-------");
+                        System.out.println(ANSI_RED+"You cannot leave command line blank.");
+                    }
+                    catch(UnsupportedOperationException OpEx)
+                    {
+                        System.out.println(ANSI_RED+"-------");
+                        System.out.println(ANSI_RED+OpEx);
+                        System.out.println(ANSI_RED+"-------");
+                        System.out.println(ANSI_RED+"Operating system not supporting that command.");
+                    }
+                    catch(Exception ex)
+                    {
+                        System.out.println(ANSI_RED+"Error");
+                    }
+                    finally
+                    {
+                        if(_Username.contains("Root"))
+                        {
+                            User1.SetRecentCommand(Command);
+                            User1.SetRecentCommandDate(dtf.format(now));
+                            User1.SetLog(User1.GetUserName()+" user wrote ("+User1.GetRecentCommand()+") command on "+User1.GetRecentCommandDate());
+                        }
+                        else if(_Username.contains("Batuhan"))
+                        {
+                            User2.SetRecentCommand(Command);
+                            User2.SetRecentCommandDate(dtf.format(now));
+                            User2.SetLog(User2.GetUserName()+" user wrote ("+User2.GetRecentCommand()+") command on "+User2.GetRecentCommandDate());
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("You cant run this command");
+                }
+            }
+            else if (IS_MAC)
+            {
+                System.out.println("Mac");
+            }
+            else if (IS_UNIX)
+            {
+                try
+                {
+                    process = Runtime.getRuntime().exec(Command, null, null);
+                    printResults(process);
+                }
+                catch(IOException IOExp)
+                {
+                    System.out.println(ANSI_RED+"-------");
+                    System.out.println(ANSI_RED+IOExp);
+                    System.out.println(ANSI_RED+"-------");
+                    System.out.println(ANSI_RED+"System: You cant run this command.");
+                }
+                catch(NullPointerException NormEx)
+                {
+                    System.out.println(ANSI_RED+"-------");
+                    System.out.println(ANSI_RED+NormEx);
+                    System.out.println(ANSI_RED+"-------");
+                    System.out.println(ANSI_RED+"You cannot leave command line blank.");
+                }
+                catch(UnsupportedOperationException OpEx)
+                {
+                    System.out.println(ANSI_RED+"-------");
+                    System.out.println(ANSI_RED+OpEx);
+                    System.out.println(ANSI_RED+"-------");
+                    System.out.println(ANSI_RED+"Operating system not supporting that command.");
+                }
+                catch(Exception ex)
+                {
+                    System.out.println(ANSI_RED+"Error");
+                }
+                finally
+                {
+                    if(_Username.contains("Root"))
+                    {
+                        User1.SetRecentCommand(Command);
+                        User1.SetRecentCommandDate(dtf.format(now));
+                        User1.SetLog(User1.GetUserName()+" user wrote ("+User1.GetRecentCommand()+") command on "+User1.GetRecentCommandDate());
+                    }
+                    else if(_Username.contains("Batuhan"))
+                    {
+                        User2.SetRecentCommand(Command);
+                        User2.SetRecentCommandDate(dtf.format(now));
+                        User2.SetLog(User2.GetUserName()+" user wrote ("+User2.GetRecentCommand()+") command on "+User2.GetRecentCommandDate());
+                    }
+                }
+            }
+            else if (IS_SOLARIS)
+            {
+                System.out.println("Solaris");
+            }
+            else
+            {
+                System.out.println(ANSI_RED+"NULL");
+            }
+        }
+
+        if(User1.GetLog() != null)
+        {
+            System.out.println(ANSI_CYAN+User1.GetLog());
+            User1.PrintUserCommands();
+        }
+        if(User2.GetLog() != null)
+        {
+            System.out.println(ANSI_CYAN+User2.GetLog());
+            User1.PrintUserCommands();
+        }
+    }
+
+
+    /*
+     Check Operating System
+     */
+    private static String OS = System.getProperty("os.name").toLowerCase();
+    public static final boolean IS_WINDOWS = (OS.indexOf("win") >= 0);
+    public static final boolean IS_MAC = (OS.indexOf("mac") >= 0);
+    public static final boolean IS_UNIX = (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+    public static final boolean IS_SOLARIS = (OS.indexOf("sunos") >= 0);
+
+    /*
+     Misc
+     */
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
+
+    /*  Print the Result of Shell Commands
+     *  @param process
+     *  @return returns the string of shell command output
+     */
+    public void printResults(Process process) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line = "";
+        while ((line = reader.readLine()) != null)
+        {
+            System.out.println(ANSI_YELLOW+line);
+        }
     }
 }
