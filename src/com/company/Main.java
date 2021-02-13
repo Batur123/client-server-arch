@@ -8,15 +8,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
 import org.junit.Test;
 
 // User Class
 class User
 {
+    //Variables
     private String UUID,RecentCommand,Log,Password,UserName,RecentCommandDate,UserSessionID;
     private List<String> ListofCommandArgs;
 
+    //Constructor
+    public User(String _UUID, String _Password, String _Username, String _UserSessionID)
+    {
+        UUID = _UUID;
+        Password = _Password;
+        UserName = _Username;
+        UserSessionID = _UserSessionID;
+    }
+
+    //Getter Setters
     public String GetUUID()
     {
         return UUID;
@@ -90,6 +100,7 @@ class User
 
     public void SetUserSessionID(String _SessionID) {this.UserSessionID = _SessionID; }
 
+    //Print User Info Function
     public void PrintUserCommands()
     {
         System.out.println("User: "+this.UUID);
@@ -141,20 +152,12 @@ public class Main
     {
         //region WithoutUnitTestFunction
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
 
             List<String> Users = Arrays.asList("Root", "Batuhan");
-            User User1 = new User();
-            User1.SetUUID("31972875-4a74-4022-bb78-2c6028cb2d6a");
-            User1.SetPassword("12345");
-            User1.SetUserName("Root");
-
-            User User2 = new User();
-            User2.SetUUID("88212c94-62b2-4cea-9996-04120c1ea87c");
-            User2.SetPassword("5544");
-            User2.SetUserName("Batuhan");
-
+            User User1 = new User("31972875-4a74-4022-bb78-2c6028cb2d6a","12345","Root","20e095a6-02fa-48b7-8c41-24bfcf3c7fb0");
+            User User2 = new User("88212c94-62b2-4cea-9996-04120c1ea87c","5544","Batuhan","1a55f567-43d1-4d4f-aa5a-e02972342a26");
 
             Scanner scanner = new Scanner(System.in);
             System.out.print(ANSI_PURPLE+"Users: ");
@@ -169,9 +172,6 @@ public class Main
             System.out.println("");
             System.out.println(ANSI_WHITE+"Select user with typing its name: "+ANSI_RESET);
             String WhichUser = scanner.nextLine();
-
-            //System.out.println(ANSI_WHITE+"Enter your password: "+ANSI_RESET);
-            //String Password = scanner.nextLine();
 
             if(!Users.contains(WhichUser))
             {
@@ -189,14 +189,13 @@ public class Main
                     //Store Args of the Command in List.
                     List<String> CommandArgs = new ArrayList<String>();
                     String[] arrOfStr = Command.split(" ", 0);
+
                     for (String a : arrOfStr)
                     {
                         CommandArgs.add(a);
                     }
 
                     User1.SetListofCommandArgs(CommandArgs);
-                  //  User2.SetListofCommandArgs(CommandArgs);
-
                     Process process;
 
                     if (IS_WINDOWS)
@@ -213,7 +212,6 @@ public class Main
                                 process = Runtime.getRuntime().exec(Command, null, null);
                                 System.out.println("Command: "+Command);
                                 printResults(process);
-
                             }
                             catch(IOException IOExp)
                             {
@@ -379,15 +377,8 @@ class UnitTest
         LocalDateTime now = LocalDateTime.now();
 
         List<String> Users = Arrays.asList("Root", "Batuhan");
-        User User1 = new User();
-        User1.SetUUID("31972875-4a74-4022-bb78-2c6028cb2d6a");
-        User1.SetPassword("12345");
-        User1.SetUserName("Root");
-
-        User User2 = new User();
-        User2.SetUUID("88212c94-62b2-4cea-9996-04120c1ea87c");
-        User2.SetPassword("5544");
-        User2.SetUserName("Batuhan");
+        User User1 = new User("31972875-4a74-4022-bb78-2c6028cb2d6a","12345","Root","20e095a6-02fa-48b7-8c41-24bfcf3c7fb0");
+        User User2 = new User("88212c94-62b2-4cea-9996-04120c1ea87c","5544","Batuhan","1a55f567-43d1-4d4f-aa5a-e02972342a26");
 
         if(!Users.contains(_Username))
         {
