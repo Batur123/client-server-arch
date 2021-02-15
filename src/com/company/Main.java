@@ -5,10 +5,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 import org.junit.Test;
 
 // User Class
@@ -20,6 +18,14 @@ class User
 
     //Constructor
     public User(String _UUID, String _Password, String _Username, String _UserSessionID)
+    {
+        UUID = _UUID;
+        Password = _Password;
+        UserName = _Username;
+        UserSessionID = _UserSessionID;
+    }
+
+    public User(String _UUID, String _Password, String _Username, String _UserSessionID,String _RecentCommand)
     {
         UUID = _UUID;
         Password = _Password;
@@ -200,7 +206,14 @@ public class Main
                             socket = new Socket(host.getHostName(), 9876);
                             oos = new ObjectOutputStream(socket.getOutputStream());
                             System.out.println("Sending quit request to Socket Server");
-                            oos.writeObject(Command);
+                            User1.SetRecentCommand(Command);
+
+                            //Send Variables to the Server
+                            List<String> Info=new LinkedList<String>();
+                            Info.add(User1.GetUserName());
+                            Info.add(User1.GetRecentCommand());
+                            oos.writeObject(Info);
+
                             ois = new ObjectInputStream(socket.getInputStream());
                             String ServerAnswer = (String) ois.readObject();
                             System.out.println(ServerAnswer);
@@ -213,31 +226,40 @@ public class Main
                         {
                             try
                             {
-                               // process = Runtime.getRuntime().exec(Command, null, null);
-
                                 InetAddress host = InetAddress.getLocalHost();
                                 Socket socket = null;
                                 ObjectOutputStream oos = null;
                                 ObjectInputStream ois = null;
 
                                 socket = new Socket(host.getHostName(), 9876);
-                                //write to socket using ObjectOutputStream
                                 oos = new ObjectOutputStream(socket.getOutputStream());
                                 System.out.println("Sending request to Socket Server");
-                                oos.writeObject(Command);
+                                User1.SetRecentCommand(Command); //User2
+
+
+                                /* Important Note
+                                    We dont use SQL in that project so you need to change User1 to User2 if you want to run through multiple users. If we use
+                                    Database that would be very easy to optimize and use.
+                                 */
+
+                                //Send Variables to the Server
+                                List<String> Info=new LinkedList<String>();
+                                Info.add(User1.GetUserName()); //User2
+                                Info.add(User1.GetRecentCommand()); //User2
+                                oos.writeObject(Info);
+
+                                //Server Response
                                 ois = new ObjectInputStream(socket.getInputStream());
                                 List<String> ServerAnswer = (List) ois.readObject();
-
                                 for (String ServerAnswerAsString : ServerAnswer)
                                 {
                                     System.out.println(ServerAnswerAsString);
                                 }
-                              //  System.out.println("Message: " + message);
-                                //close resources
+
+                                //Collection
                                 ois.close();
                                 oos.close();
                                 Thread.sleep(100);
-                               // printResults(process);
                             }
                             catch(Exception ex)
                             {
@@ -283,7 +305,13 @@ public class Main
                             socket = new Socket(host.getHostName(), 9876);
                             oos = new ObjectOutputStream(socket.getOutputStream());
                             System.out.println("Sending quit request to Socket Server");
-                            oos.writeObject(Command);
+                            User1.SetRecentCommand(Command);
+
+                            //Send Variables to the Server
+                            List<String> Info=new LinkedList<String>();
+                            Info.add(User1.GetUserName());
+                            Info.add(User1.GetRecentCommand());
+                            oos.writeObject(Info);
                             ois = new ObjectInputStream(socket.getInputStream());
                             String ServerAnswer = (String) ois.readObject();
                             System.out.println(ServerAnswer);
@@ -304,14 +332,23 @@ public class Main
                                 socket = new Socket(host.getHostName(), 9876);
                                 oos = new ObjectOutputStream(socket.getOutputStream());
                                 System.out.println("Sending request to Socket Server");
-                                oos.writeObject(Command);
+                                User1.SetRecentCommand(Command);
+
+                                //Send Variables to the Server
+                                List<String> Info=new LinkedList<String>();
+                                Info.add(User1.GetUserName());
+                                Info.add(User1.GetRecentCommand());
+                                oos.writeObject(Info);
+
+                                //Server Response
                                 ois = new ObjectInputStream(socket.getInputStream());
                                 List<String> ServerAnswer = (List) ois.readObject();
-
                                 for (String ServerAnswerAsString : ServerAnswer)
                                 {
                                     System.out.println(ServerAnswerAsString);
                                 }
+
+                                //Collection
                                 ois.close();
                                 oos.close();
                                 Thread.sleep(100);

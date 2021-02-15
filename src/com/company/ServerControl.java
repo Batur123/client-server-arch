@@ -8,11 +8,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+
 public class ServerControl
 {
-        /*
-        Check Operating System
-        */
+    /*
+    Check Operating System
+    */
     private static String OS = System.getProperty("os.name").toLowerCase();
     public static final boolean IS_WINDOWS = (OS.indexOf("win") >= 0);
     public static final boolean IS_MAC = (OS.indexOf("mac") >= 0);
@@ -72,10 +73,16 @@ public class ServerControl
             System.out.println("Waiting for the client request.");
             Socket socket = server.accept();
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            List<String> InfoReceive;
 
-            //Temporary Message
-            String message = (String) ois.readObject();
-            System.out.println("Client message received: "+message);
+            //Get Client Request to the List
+            // List[0] Username , List[1] Sender Message
+            InfoReceive = (List) ois.readObject();
+            String message = InfoReceive.get(1);
+            String Username = InfoReceive.get(0);
+
+            //Console Output -> "[Username]: Command"
+            System.out.println(ANSI_RESET+ANSI_CYAN+"["+ANSI_YELLOW+Username+ANSI_CYAN+"]: "+ANSI_BLUE+message+ANSI_RESET);
 
             if(message.equalsIgnoreCase("quit"))
             {
@@ -90,7 +97,6 @@ public class ServerControl
             {
                 Process process;
                 List<String> ResponseMessage = new ArrayList<>();;
-
                 try
                 {
                     process = Runtime.getRuntime().exec(message, null, null);
@@ -114,6 +120,8 @@ public class ServerControl
 
             }
         }
+
+        //Initiate Shut Down
         System.out.println("Shutting down the server.");
         server.close();
     }
