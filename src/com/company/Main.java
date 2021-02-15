@@ -1,7 +1,8 @@
 package com.company;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -125,7 +126,7 @@ public class Main
     public static final boolean IS_SOLARIS = (OS.indexOf("sunos") >= 0);
 
     /*
-     Misc
+     Command Line Colors
      */
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -152,7 +153,7 @@ public class Main
         }
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException
     {
         //region WithoutUnitTestFunction
 
@@ -173,7 +174,7 @@ public class Main
                     System.out.print(",");
                 }
             }
-            System.out.println("");
+            System.out.println(" ");
             System.out.println(ANSI_WHITE+"Select user with typing its name: "+ANSI_RESET);
             String WhichUser = scanner.nextLine();
 
@@ -207,36 +208,42 @@ public class Main
                         //Terminates the command line
                         if(Command.equals("quit"))
                         {
-                            check = false;
+                            InetAddress host = InetAddress.getLocalHost();
+                            Socket socket = null;
+                            ObjectOutputStream oos = null;
+                            ObjectInputStream ois = null;
+
+                            oos.writeObject(Command);
                         }
                         else if(!Command.equals("cmd"))
                         {
                             try
                             {
-                                process = Runtime.getRuntime().exec(Command, null, null);
-                                System.out.println("Command: "+Command);
-                                printResults(process);
-                            }
-                            catch(IOException IOExp)
-                            {
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+IOExp);
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+"System: Wrong command.");
-                            }
-                            catch(NullPointerException NormEx)
-                            {
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+NormEx);
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+"You cannot leave command line blank.");
-                            }
-                            catch(UnsupportedOperationException OpEx)
-                            {
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+OpEx);
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+"Operating system not supporting that command.");
+                               // process = Runtime.getRuntime().exec(Command, null, null);
+
+                                InetAddress host = InetAddress.getLocalHost();
+                                Socket socket = null;
+                                ObjectOutputStream oos = null;
+                                ObjectInputStream ois = null;
+
+                                socket = new Socket(host.getHostName(), 9876);
+                                //write to socket using ObjectOutputStream
+                                oos = new ObjectOutputStream(socket.getOutputStream());
+                                System.out.println("Sending request to Socket Server");
+                                oos.writeObject(Command);
+                                ois = new ObjectInputStream(socket.getInputStream());
+                                List<String> ServerAnswer = (List) ois.readObject();
+
+                                for (String ServerAnswerAsString : ServerAnswer)
+                                {
+                                    System.out.println(ServerAnswerAsString);
+                                }
+                              //  System.out.println("Message: " + message);
+                                //close resources
+                                ois.close();
+                                oos.close();
+                                Thread.sleep(100);
+                               // printResults(process);
                             }
                             catch(Exception ex)
                             {
