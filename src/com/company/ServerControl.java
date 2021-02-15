@@ -61,12 +61,13 @@ public class ServerControl
         {
             try
             {
-                System.out.println("Waiting for the client request");
+                System.out.println("Waiting for the client request.");
                 Socket socket = server.accept();
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
                 //Temporary Message
                 String message = (String) ois.readObject();
+                System.out.println("Client message received: "+message);
 
                 if(message.equalsIgnoreCase("quit"))
                 {
@@ -84,13 +85,7 @@ public class ServerControl
                     List<String> ResponseMessage;
                     ResponseMessage = printResults(process);
 
-                //    System.out.println(Arrays.toString(ResponseMessage.toArray()));
-                    System.out.println("Mesaj geldi:"+ ResponseMessage.get(0));
-              //      String TempResponse = Arrays.toString(ResponseMessage.toArray());
-
-
                     //Send Message to Server Itself
-                    //  System.out.println("Message Received: " + printResults(process));
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
                     //Send Message to Client
@@ -99,15 +94,11 @@ public class ServerControl
                     oos.close();
                     socket.close();
                 }
-                //Collection
             }
             catch(Exception ex)
             {
-
                 System.out.println(ex);
             }
-
-
         }
         System.out.println("Shutting down the server.");
         server.close();

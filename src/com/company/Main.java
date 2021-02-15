@@ -138,21 +138,6 @@ public class Main
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
-
-    /*  Print the Result of Shell Commands
-     *  @param process
-     *  @return returns the string of shell command output
-     */
-    public static void printResults(Process process) throws IOException
-    {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = "";
-        while ((line = reader.readLine()) != null)
-        {
-            System.out.println(ANSI_YELLOW+line);
-        }
-    }
-
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException
     {
         //region WithoutUnitTestFunction
@@ -212,8 +197,17 @@ public class Main
                             Socket socket = null;
                             ObjectOutputStream oos = null;
                             ObjectInputStream ois = null;
-
+                            socket = new Socket(host.getHostName(), 9876);
+                            oos = new ObjectOutputStream(socket.getOutputStream());
+                            System.out.println("Sending quit request to Socket Server");
                             oos.writeObject(Command);
+                            ois = new ObjectInputStream(socket.getInputStream());
+                            String ServerAnswer = (String) ois.readObject();
+                            System.out.println(ServerAnswer);
+                            ois.close();
+                            oos.close();
+                            check = false;
+                            Thread.sleep(100);
                         }
                         else if(!Command.equals("cmd"))
                         {
@@ -282,35 +276,45 @@ public class Main
                     {
                         if(Command.equals("quit"))
                         {
+                            InetAddress host = InetAddress.getLocalHost();
+                            Socket socket = null;
+                            ObjectOutputStream oos = null;
+                            ObjectInputStream ois = null;
+                            socket = new Socket(host.getHostName(), 9876);
+                            oos = new ObjectOutputStream(socket.getOutputStream());
+                            System.out.println("Sending quit request to Socket Server");
+                            oos.writeObject(Command);
+                            ois = new ObjectInputStream(socket.getInputStream());
+                            String ServerAnswer = (String) ois.readObject();
+                            System.out.println(ServerAnswer);
+                            ois.close();
+                            oos.close();
                             check = false;
+                            Thread.sleep(100);
                         }
                         else
                         {
                             try
                             {
-                                process = Runtime.getRuntime().exec(Command, null, null);
-                                printResults(process);
-                            }
-                            catch(IOException IOExp)
-                            {
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+IOExp);
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+"System: You cant run this command.");
-                            }
-                            catch(NullPointerException NormEx)
-                            {
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+NormEx);
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+"You cannot leave command line blank.");
-                            }
-                            catch(UnsupportedOperationException OpEx)
-                            {
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+OpEx);
-                                System.out.println(ANSI_RED+"-------");
-                                System.out.println(ANSI_RED+"Operating system not supporting that command.");
+                                InetAddress host = InetAddress.getLocalHost();
+                                Socket socket = null;
+                                ObjectOutputStream oos = null;
+                                ObjectInputStream ois = null;
+
+                                socket = new Socket(host.getHostName(), 9876);
+                                oos = new ObjectOutputStream(socket.getOutputStream());
+                                System.out.println("Sending request to Socket Server");
+                                oos.writeObject(Command);
+                                ois = new ObjectInputStream(socket.getInputStream());
+                                List<String> ServerAnswer = (List) ois.readObject();
+
+                                for (String ServerAnswerAsString : ServerAnswer)
+                                {
+                                    System.out.println(ServerAnswerAsString);
+                                }
+                                ois.close();
+                                oos.close();
+                                Thread.sleep(100);
                             }
                             catch(Exception ex)
                             {
