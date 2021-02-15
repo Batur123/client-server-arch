@@ -318,7 +318,7 @@ public class Main
                             }
                             catch(Exception ex)
                             {
-                                System.out.println(ANSI_RED+"Error");
+                                System.out.println(ANSI_YELLOW+"[System Message]:"+ANSI_RED+"An error has occured while getting the answer.");
                             }
                             finally
                             {

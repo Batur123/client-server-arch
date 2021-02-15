@@ -3,6 +3,7 @@ import java.io.*;
 import java.lang.ClassNotFoundException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,14 +40,24 @@ public class ServerControl
     public static List<String> printResults(Process process) throws IOException
     {
         List<String> lines = new LinkedList<>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line = "";
-        while ((line = reader.readLine()) != null)
-        {
-            lines.add(line);
-        }
 
-        return lines;
+        try
+        {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = "";
+            while ((line = reader.readLine()) != null)
+            {
+                lines.add(line);
+            }
+
+            return lines;
+        }
+        catch(Exception ex)
+        {
+            lines.clear();
+            lines.add("System error.");
+            return lines;
+        }
     }
 
     private static ServerSocket server;
@@ -54,37 +65,43 @@ public class ServerControl
 
     public static void main(String args[]) throws IOException, ClassNotFoundException
     {
-
         server = new ServerSocket(port);
 
         while(true)
         {
-            try
+            System.out.println("Waiting for the client request.");
+            Socket socket = server.accept();
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+            //Temporary Message
+            String message = (String) ois.readObject();
+            System.out.println("Client message received: "+message);
+
+            if(message.equalsIgnoreCase("quit"))
             {
-                System.out.println("Waiting for the client request.");
-                Socket socket = server.accept();
-                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject("Server shut down.");
+                ois.close();
+                oos.close();
+                socket.close();
+                break;
+            }
+            else
+            {
+                Process process;
+                List<String> ResponseMessage = new ArrayList<>();;
 
-                //Temporary Message
-                String message = (String) ois.readObject();
-                System.out.println("Client message received: "+message);
-
-                if(message.equalsIgnoreCase("quit"))
+                try
                 {
-                    ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                    oos.writeObject("Server shut down.");
-                    ois.close();
-                    oos.close();
-                    socket.close();
-                    break;
-                }
-                else
-                {
-                    Process process;
                     process = Runtime.getRuntime().exec(message, null, null);
-                    List<String> ResponseMessage;
                     ResponseMessage = printResults(process);
-
+                }
+                catch(Exception ex)
+                {
+                    ResponseMessage.add(ANSI_RESET+ANSI_RED+"[System Error]: "+ANSI_RESET+ANSI_YELLOW+ex+ANSI_RESET);
+                }
+                finally
+                {
                     //Send Message to Server Itself
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
 
@@ -94,10 +111,7 @@ public class ServerControl
                     oos.close();
                     socket.close();
                 }
-            }
-            catch(Exception ex)
-            {
-                System.out.println(ex);
+
             }
         }
         System.out.println("Shutting down the server.");
