@@ -3,9 +3,12 @@ import java.io.*;
 import java.lang.ClassNotFoundException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 import static com.company.Miscellaneous.*;
 
 
@@ -16,13 +19,17 @@ public class ServerControl
     private static int port = 9876;
 
     //Server
-    public static void main(String args[]) throws IOException, ClassNotFoundException
+    public static void main(String args[]) throws IOException, ClassNotFoundException, ParseException
     {
-        server = new ServerSocket(port);
 
+        server = new ServerSocket(port);
+        System.out.println(ANSI_RESET+ANSI_RED+"[Server]: "+ANSI_YELLOW+"Server started. Waiting for client request."+ANSI_RESET);
         while(true)
         {
-            System.out.println("Waiting for the client request.");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+
+
             Socket socket = server.accept();
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             List<String> InfoReceive;
@@ -34,7 +41,7 @@ public class ServerControl
             String Username = InfoReceive.get(0);
 
             //Console Output -> "[Username]: Command"
-            System.out.println(ANSI_RESET+ANSI_CYAN+"["+ANSI_YELLOW+Username+ANSI_CYAN+"]: "+ANSI_BLUE+message+ANSI_RESET);
+            System.out.println(ANSI_RESET+ANSI_RED+"["+dtf.format(now)+"]"+ANSI_RESET+ANSI_CYAN+"["+ANSI_YELLOW+Username+ANSI_CYAN+"]: "+ANSI_BLUE+message+ANSI_RESET);
 
             if(message.equalsIgnoreCase("quit") && Username.equals("Root"))
             {
