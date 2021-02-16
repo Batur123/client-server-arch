@@ -87,7 +87,6 @@ public class Main
                             ObjectInputStream ois = null;
                             socket = new Socket(host.getHostName(), 9876);
                             oos = new ObjectOutputStream(socket.getOutputStream());
-                            System.out.println("Sending quit request to Socket Server");
                             user.SetRecentCommand(Command);
 
                             //Send Variables to the Server
@@ -115,7 +114,7 @@ public class Main
 
                                 socket = new Socket(host.getHostName(), 9876);
                                 oos = new ObjectOutputStream(socket.getOutputStream());
-                                System.out.println("Sending request to Socket Server");
+                                //System.out.println(ANSI_RESET+ANSI_RED+"[Server]: "+ANSI_BLUE+"Sending request to Socket Server"+ANSI_RESET);
                                 user.SetRecentCommand(Command); //User2
 
                                 //Send Variables to the Server
@@ -169,7 +168,6 @@ public class Main
                             ObjectInputStream ois = null;
                             socket = new Socket(host.getHostName(), 9876);
                             oos = new ObjectOutputStream(socket.getOutputStream());
-                            System.out.println("Sending quit request to Socket Server");
                             user.SetRecentCommand(Command);
 
                             //Send Variables to the Server
@@ -196,7 +194,6 @@ public class Main
 
                                 socket = new Socket(host.getHostName(), 9876);
                                 oos = new ObjectOutputStream(socket.getOutputStream());
-                                System.out.println("Sending request to Socket Server");
                                 user.SetRecentCommand(Command);
 
                                 //Send Variables to the Server
