@@ -10,14 +10,13 @@ import static com.company.Miscellaneous.*;
 
 public class Main
 {
-
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException
     {
-        //Establish SQL connection.
-        SQLConnection.connect("UsersDatabase.db");
-
         //Create User Table
         SQLConnection.createNewTable("UsersDatabase.db");
+
+        //Establish SQL connection.
+        SQLConnection.connect("UsersDatabase.db");
 
         //Insert Users
         SQLConnection.InsertDatabase("31972875-4a74-4022-bb78-2c6028cb2d6a","Root","12345","NULLForNow");
@@ -256,28 +255,28 @@ public class Main
             System.out.println(ANSI_RED+"You selected wrong username.");
         }
 
-            int Choose = 0;
+        int Choose = 0;
 
-            System.out.println(ANSI_RED+"Do you want to go back? Press 1 for reset program. Press anything except 1 for exit."+ANSI_RESET);
-            try
-            {
-                Choose = scanner.nextInt();
-            }
-            catch(Exception ex)
-            {
+        System.out.println(ANSI_RED+"[Server]: "+ANSI_YELLOW+"Do you want to go back? Press 1 for reset program. Press anything except 1 for exit."+ANSI_RESET);
+        try
+        {
+            Choose = scanner.nextInt();
+        }
+        catch(Exception ex)
+        {
 
-            }
+        }
 
-            switch(Choose)
+        switch(Choose)
+        {
+            case 1:
             {
-                case 1:
-                {
-                    main(args);
-                }
-                default:
-                {
-                    break;
-                }
+                main(args);
             }
+            default:
+            {
+                break;
+            }
+        }
     }
 }

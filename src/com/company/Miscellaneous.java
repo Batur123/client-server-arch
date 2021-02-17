@@ -13,7 +13,7 @@ import static com.company.Miscellaneous.*;
 class SQLConnection
 {
 
-    /*
+    /**
     Note:
     Do not forget to add sqlite-jbdc-3.34.0.jar to the libraries in any IDE.
      */
@@ -160,7 +160,7 @@ class SQLConnection
 
     }
 
-    /*
+    /**
     public static void Login(String Username, String Password)
     {
         String query = "SELECT * FROM Users where Username=? and Password=?";
@@ -238,17 +238,19 @@ class SQLConnection
 public class Miscellaneous
 {
     //region Variables
-    /*
-  Check Operating System
-  */
+
+
+    /**
+     * Check Operating System
+     */
     public static String OS = System.getProperty("os.name").toLowerCase();
     public static final boolean IS_WINDOWS = (OS.indexOf("win") >= 0);
     public static final boolean IS_MAC = (OS.indexOf("mac") >= 0);
     public static final boolean IS_UNIX = (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
     public static final boolean IS_SOLARIS = (OS.indexOf("sunos") >= 0);
 
-    /*
-     Command Line Colors
+    /**
+     * Command Line Colors
      */
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -261,7 +263,7 @@ public class Miscellaneous
     public static final String ANSI_WHITE = "\u001B[37m";
     //endregion
 
-    /*  Print the Result of Shell Commands
+    /** Print the Result of Shell Commands
      *  @param process
      *  @return returns the string of shell command output
      */
@@ -275,9 +277,9 @@ public class Miscellaneous
         }
     }
 
-    /*  Print the Result of Shell Commands
+    /**  Print the Result of Shell Commands
      *  @param process
-     *  @return returns the string of shell command output
+     *  @return List<String>
      */
     public static List<String> printResults(Process process) throws IOException
     {
