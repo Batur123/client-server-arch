@@ -3,6 +3,7 @@
 1 - Run ServerControl.Java (Main Server)<br/>
 2 - Run Main.Java (Client) <br/>
 3 - Send Command to the Server in Main.Java (For example ipconfig /all). Then get response from ServerControl.Java
+
 <br/>
 Note: If you want to run 2 Client and 1 Server at the same time, you need to let parallel run for Main.Java in IDE options (Intellij has that option in: Run->Edit Configurations->Application->Main.Java->Modify Options->Allow Multiple Instances)
 <br/>
