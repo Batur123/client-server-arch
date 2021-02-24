@@ -65,7 +65,7 @@ public class Main
                     String Command = scanner.nextLine();
 
                     //Store Args of the Command in List.
-                    List<String> CommandArgs = new ArrayList<String>();
+                    List<String> CommandArgs = new ArrayList<>();
                     String[] arrOfStr = Command.split(" ", 0);
 
                     for (String a : arrOfStr)
@@ -77,80 +77,48 @@ public class Main
 
                     if (IS_WINDOWS)
                     {
-                        //Terminates the command line
-                        if(Command.equals("quit"))
+                        try
                         {
                             InetAddress host = InetAddress.getLocalHost();
                             Socket socket = null;
                             ObjectOutputStream oos = null;
                             ObjectInputStream ois = null;
+
                             socket = new Socket(host.getHostName(), 9876);
                             oos = new ObjectOutputStream(socket.getOutputStream());
-                            user.SetRecentCommand(Command);
+                            //System.out.println(ANSI_RESET+ANSI_RED+"[Server]: "+ANSI_BLUE+"Sending request to Socket Server"+ANSI_RESET);
+                            user.SetRecentCommand(Command); //User2
 
                             //Send Variables to the Server
                             List<String> Info=new LinkedList<String>();
-                            Info.add(user.GetUserName());
-                            Info.add(user.GetRecentCommand());
+                            Info.add(user.GetUserName()); //User2
+                            Info.add(user.GetRecentCommand()); //User2
                             oos.writeObject(Info);
 
+                            //Server Response
                             ois = new ObjectInputStream(socket.getInputStream());
-                            String ServerAnswer = (String) ois.readObject();
-                            System.out.println(ServerAnswer);
+                            List<String> ServerAnswer = (List) ois.readObject();
+                            for (String ServerAnswerAsString : ServerAnswer)
+                            {
+                                System.out.println(ServerAnswerAsString);
+                            }
+
+                            //Collection
                             ois.close();
                             oos.close();
-                            check = false;
                             Thread.sleep(100);
                         }
-                        else if(!Command.equals("cmd"))
+                        catch(Exception ex)
                         {
-                            try
-                            {
-                                InetAddress host = InetAddress.getLocalHost();
-                                Socket socket = null;
-                                ObjectOutputStream oos = null;
-                                ObjectInputStream ois = null;
-
-                                socket = new Socket(host.getHostName(), 9876);
-                                oos = new ObjectOutputStream(socket.getOutputStream());
-                                //System.out.println(ANSI_RESET+ANSI_RED+"[Server]: "+ANSI_BLUE+"Sending request to Socket Server"+ANSI_RESET);
-                                user.SetRecentCommand(Command); //User2
-
-                                //Send Variables to the Server
-                                List<String> Info=new LinkedList<String>();
-                                Info.add(user.GetUserName()); //User2
-                                Info.add(user.GetRecentCommand()); //User2
-                                oos.writeObject(Info);
-
-                                //Server Response
-                                ois = new ObjectInputStream(socket.getInputStream());
-                                List<String> ServerAnswer = (List) ois.readObject();
-                                for (String ServerAnswerAsString : ServerAnswer)
-                                {
-                                    System.out.println(ServerAnswerAsString);
-                                }
-
-                                //Collection
-                                ois.close();
-                                oos.close();
-                                Thread.sleep(100);
-                            }
-                            catch(Exception ex)
-                            {
-                                System.out.println(ANSI_RED+"Error");
-                            }
-                            finally
-                            {
-                                user.SetRecentCommand(Command);
-                                user.SetRecentCommandDate(dtf.format(now));
-                                user.SetLog(user.GetUserName()+" user wrote ("+user.GetRecentCommand()+") command on "+user.GetRecentCommandDate());
-                                user.SetListofCommandArgs(CommandArgs);
-                                user.SetOperatingSystem(OS);
-                            }
+                            System.out.println(ANSI_RED+"Error");
                         }
-                        else
+                        finally
                         {
-                            System.out.println("You cant run this command");
+                            user.SetRecentCommand(Command);
+                            user.SetRecentCommandDate(dtf.format(now));
+                            user.SetLog(user.GetUserName()+" user wrote ("+user.GetRecentCommand()+") command on "+user.GetRecentCommandDate());
+                            user.SetListofCommandArgs(CommandArgs);
+                            user.SetOperatingSystem(OS);
                         }
                     }
                     else if (IS_MAC)

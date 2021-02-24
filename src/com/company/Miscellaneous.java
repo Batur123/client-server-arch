@@ -160,7 +160,7 @@ class SQLConnection
 
     }
 
-    /**
+    /*
     public static void Login(String Username, String Password)
     {
         String query = "SELECT * FROM Users where Username=? and Password=?";
@@ -208,6 +208,7 @@ class SQLConnection
     }
 
     public static List<String> UsernamesAll = new ArrayList<>();
+
     public static void ListAllUsers()
     {
         String query = "SELECT DISTINCT Username FROM Users";
